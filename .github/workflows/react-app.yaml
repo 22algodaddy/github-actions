@@ -1,0 +1,76 @@
+name: Terraform S3 and React App Upload
+
+on:
+#   push:
+#     branches:
+#       - main
+  workflow_dispatch:
+
+jobs:
+  create-s3-bucket:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.0  # Specify the Terraform version you want to use
+
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform  # Path to your Terraform configuration
+
+      # Create S3 bucket
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-west-2'  # Specify your AWS region
+        working-directory: ./terraform  # Path to your Terraform configuration
+
+      # Save the output (bucket name) to use in the next job
+      - name: Save output
+        id: output
+        run: echo "bucket_name=$(terraform output -raw bucket_name)" >> $GITHUB_ENV
+        working-directory: ./terraform  # Path to your Terraform configuration
+
+  build-and-upload-react-app:
+    runs-on: ubuntu-latest
+    needs: create-s3-bucket  # This job depends on the S3 bucket being created
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Specify the Node.js version you want to use
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./React-App  # Path to your React app
+
+      # Build the React app
+      - name: Build React app
+        run: npm run build
+        working-directory: ./React-App  # Path to your React app
+
+      # Push artifacts to S3 bucket
+      - name: Upload to S3
+        run: |
+          aws s3 sync ./React-App/build s3://$bucket_name/  # Sync the build folder to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Use your AWS access key
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Use your AWS secret key
+          AWS_DEFAULT_REGION: 'us-west-2'  # Specify your AWS region
