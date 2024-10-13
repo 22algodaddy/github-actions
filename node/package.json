@@ -5,11 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "dhruv",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "webpack": "^5.95.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
   }
 }
