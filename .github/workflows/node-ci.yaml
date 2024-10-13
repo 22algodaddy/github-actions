@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   build:
@@ -43,3 +43,28 @@ jobs:
       # Echoing success message
       - name: Echoing Successful execution
         run: ls -altr && pwd
+
+  # CodeQL analysis job
+  analyze:
+    runs-on: ubuntu-latest
+    name: CodeQL Analysis
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: "Setting working directory"
+        run: echo "Setting working directory"
+        working-directory: ./node    
+
+      # Initialize CodeQL
+      - name: Set up CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript  # Specify the language(s) you want to analyze
+
+      # Perform CodeQL analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "security"  # Set the category to security to check for vulnerabilities
