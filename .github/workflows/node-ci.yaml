@@ -46,6 +46,11 @@ jobs:
 
   # CodeQL analysis job
   analyze:
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
     runs-on: ubuntu-latest
     name: CodeQL Analysis
     steps:
