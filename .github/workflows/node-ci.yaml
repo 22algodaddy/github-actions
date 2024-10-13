@@ -42,4 +42,4 @@ jobs:
 
       # Echoing success message
       - name: Echoing Successful execution
-        run: ls -altr
+        run: ls -altr && pwd
