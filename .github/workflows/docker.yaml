@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}  # Your Docker Hub password
 
       - name: Build Docker image
-        run: docker build . -t ${{ secrets.DOCKER_USERNAME }}/dhruv-py:latest
+        run: docker build ./Docker -t ${{ secrets.DOCKER_USERNAME }}/dhruv-py:latest
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/dhruv-py:latest
