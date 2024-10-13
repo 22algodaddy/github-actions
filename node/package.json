@@ -1,0 +1,15 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "Sample node application for testing github actions",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node index.js"
+  },
+  "author": "dhruv",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}

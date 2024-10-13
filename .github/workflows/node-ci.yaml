@@ -1,0 +1,45 @@
+name: Node.js CI
+
+# Triggers the workflow on push to the 'main' branch and pull requests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Define the environment where the job will run
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set the working directory
+      - name: Set working directory
+        run: echo "Setting working directory"
+        working-directory: ./node  # Specify the directory where Node.js app is located
+
+      # Set up Node.js environment using version specified in the workflow
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Specify the Node.js version you want
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./node  # Set working directory
+
+      # Build the application (optional, if your project has a build step)
+      - name: Build application
+        run: npm run build
+        working-directory: ./node  # Set working directory
+
+      # Echoing success message
+      - name: Echoing Successful execution
+        run: echo "Build successful"
