@@ -38,7 +38,7 @@ jobs:
       # Save the output (bucket name) to use in the next job
       - name: Save output
         id: output
-        run: echo "bucket_name=$(terraform output -raw bucket_name)" >> $GITHUB_ENV
+        run: echo "bucket_name=$(terraform output bucket_name)" >> $GITHUB_ENV
         working-directory: ./terraform  # Path to your Terraform configuration
 
   build-and-upload-react-app:
