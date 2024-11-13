@@ -56,5 +56,12 @@ jobs:
 
       - name: Deploy to AKS
         run: |
-          kubectl set image deployment/my-app-deployment my-app-container=$AZURE_CONTAINER_REGISTRY/my-app:${{ github.sha }}
-          kubectl rollout status deployment/my-app-deployment
+          kubectl create deployment my-app --image=$AZURE_CONTAINER_REGISTRY/my-app:${{ github.sha }}
+          kubectl expose deployment my-app --port=5000 --target-port=5000 --type=LoadBalancer
+
+
+
+
+
+
+
