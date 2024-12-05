@@ -38,8 +38,8 @@ jobs:
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "GitHub Actions Pipeline Failure"
-          to: recipient@example.com
-          from: sender@example.com
+          to: choubeydhruv1@gmail.com
+          from: github@example.com
           body: |
             The pipeline for ${{ github.repository }} failed.
             Workflow: ${{ github.workflow }}
