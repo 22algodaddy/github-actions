@@ -1,23 +1,46 @@
-name: "Hello world workflow"
+name: "Hello World Workflow"
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  workflow_dispatch:  # Added colon for consistency
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs: 
   hello: 
     runs-on: ubuntu-latest
     steps: 
-      - uses: actions/checkout@v3  # Updated to the latest version
-      - name: hello-world
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Hello World
         run: ls -altr
         shell: bash
 
   goodbye: 
     runs-on: ubuntu-latest
     steps: 
-      - name: goodbye-world
+      - name: Goodbye World
         run: echo "Goodbye world"
         shell: bash
+
+  send-email-on-failure:
+    if: failure() # This ensures the job only runs if the workflow fails
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send email on failure
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "GitHub Actions Pipeline Failure"
+          to: recipient@example.com
+          from: sender@example.com
+          body: |
+            The pipeline for ${{ github.repository }} failed.
+            Workflow: ${{ github.workflow }}
+            Job: ${{ github.job }}
+            Commit: ${{ github.sha }}
+            Check the logs for details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
