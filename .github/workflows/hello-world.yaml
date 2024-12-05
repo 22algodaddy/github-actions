@@ -14,19 +14,21 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Hello World
-        run: lser -altr
+        run: lser -altr # Intentional typo to cause failure
         shell: bash
 
   goodbye: 
     runs-on: ubuntu-latest
+    needs: hello # Ensures this runs after the 'hello' job
     steps: 
       - name: Goodbye World
         run: echo "Goodbye world"
         shell: bash
 
   send-email-on-failure:
-    if: failure() # This ensures the job only runs if the workflow fails
     runs-on: ubuntu-latest
+    needs: [hello, goodbye] # Ensures this runs after the 'hello' and 'goodbye' jobs
+    if: failure() # Triggers only if a dependent job fails
     steps:
       - name: Send email on failure
         uses: dawidd6/action-send-mail@v3
